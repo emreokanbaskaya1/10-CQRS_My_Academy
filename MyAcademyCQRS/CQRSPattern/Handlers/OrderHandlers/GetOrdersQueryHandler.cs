@@ -28,7 +28,7 @@ public class GetOrdersQueryHandler
                 DiscountAmount = o.DiscountAmount,
                 Status = o.Status,
                 CreatedDate = o.CreatedDate,
-                ItemCount = o.OrderItems.Count
+                ItemCount = o.OrderItems.Sum(oi => oi.Quantity)
             })
             .ToListAsync();
     }

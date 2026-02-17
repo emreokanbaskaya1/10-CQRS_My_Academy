@@ -1,5 +1,7 @@
+@using System.Globalization
 @{
     ViewData["Title"] = "Ana Sayfa";
+    var trCulture = new CultureInfo("tr-TR");
     var sliders = ViewBag.Sliders as List<MyAcademyCQRS.Entities.Slider> ?? new();
     var serviceSteps = ViewBag.ServiceSteps as List<MyAcademyCQRS.Entities.ServiceStep> ?? new();
     var history = ViewBag.OurHistory as MyAcademyCQRS.Entities.OurHistory;
@@ -17,7 +19,7 @@
 
 <!-- Banner Section -->
 <section class="banner-section style-one">
-    <div class="banner-carousel owl-theme owl-carousel owl-dots-none">
+    <div class="banner-carousel owl-theme owl-carousel owl-dots-none nav-style-one">
         @foreach (var slider in sliders)
         {
             <div class="slide-item">
@@ -26,10 +28,6 @@
                     <div class="content-box">
                         <h1>@slider.Title</h1>
                         <p>@slider.Description</p>
-                        @if (!string.IsNullOrEmpty(slider.ButtonText))
-                        {
-                            <div class="btn-box"><a href="@(slider.ButtonUrl ?? "#")" class="theme-btn-one">@slider.ButtonText</a></div>
-                        }
                     </div>
                 </div>
             </div>
@@ -42,7 +40,6 @@
                     <div class="content-box">
                         <h1>En Taze Pastane Ürünleri</h1>
                         <p>Geleneksel tariflerle hazýrlanan birbirinden lezzetli pastane ürünleri</p>
-                        <div class="btn-box"><a href="/Home/Shop" class="theme-btn-one">Ürünlere Göz At</a></div>
                     </div>
                 </div>
             </div>
@@ -181,7 +178,7 @@
                             <figure class="image-box product-image-uniform">
                                 <img src="@(product.ImageUrl ?? "/images/resource/shop/product-1.jpg")" alt="@product.Name">
                                 <div class="product-overlay">
-                                    <a href="#" class="cart-btn" onclick="document.getElementById('addToCart_@product.Id').submit();return false;">
+                                    <a href="#" class="cart-btn add-to-cart-btn" data-product-id="@product.Id">
                                         <i class="fas fa-shopping-cart"></i>
                                         <span class="cart-text">Sepete Ekle</span>
                                     </a>
@@ -189,13 +186,10 @@
                             </figure>
                             <div class="lower-content">
                                 <h4>@product.Name</h4>
-                                <span class="price">?@product.Price.ToString("N2")</span>
+                                <span class="price">@product.Price.ToString("C", trCulture)</span>
                             </div>
                         </div>
                     </div>
-                    <form id="addToCart_@product.Id" asp-action="AddToCart" asp-controller="Home" method="post" style="display:none;">
-                        <input type="hidden" name="productId" value="@product.Id">
-                    </form>
                 </div>
             }
         </div>
@@ -641,24 +635,64 @@
 </style>
 }
 
+<style>
+    .banner-carousel .owl-nav {
+        display: none !important;
+    }
+</style>
+
 @section Scripts {
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        @if (TempData["CartSuccess"] != null)
-        {
-            var cartMessage = @Html.Raw(Json.Serialize(TempData["CartSuccess"].ToString()));
-            <text>
-            Swal.fire({
-                icon: 'success',
-                title: 'Baþarýlý!',
-                text: cartMessage,
-                confirmButtonColor: '#c3935b',
-                confirmButtonText: 'Tamam',
-                timer: 2000,
-                showConfirmButton: true
+
+        document.querySelectorAll('.add-to-cart-btn').forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                var productId = this.getAttribute('data-product-id');
+
+                fetch('/Home/AddToCart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value ?? ''
+                    },
+                    body: 'productId=' + productId
+                })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sepete Eklendi!',
+                            text: data.message,
+                            confirmButtonColor: '#c3935b',
+                            confirmButtonText: 'Tamam',
+                            timer: 2000,
+                            showConfirmButton: true
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: 'Ürün sepete eklenemedi.',
+                            confirmButtonColor: '#c3935b',
+                            confirmButtonText: 'Tamam'
+                        });
+                    }
+                })
+                .catch(function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata!',
+                        text: 'Bir hata oluþtu, lütfen tekrar deneyin.',
+                        confirmButtonColor: '#c3935b',
+                        confirmButtonText: 'Tamam'
+                    });
+                });
             });
-            </text>
-        }
+        });
+
     });
 </script>
 }

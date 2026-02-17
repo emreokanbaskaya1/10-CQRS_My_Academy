@@ -1,6 +1,8 @@
 @{ 
     ViewData["Title"] = "İletişim";
     var pageHeader = ViewBag.PageHeader as MyAcademyCQRS.Entities.PageHeader;
+    var successMsg = TempData["Success"]?.ToString();
+    var errorMsg = TempData["Error"]?.ToString();
 }
 
 <section class="page-title" style="background-image:url(@(pageHeader?.BackgroundImageUrl ?? "/images/background/page-title.jpg"));">
@@ -57,27 +59,25 @@
 @section Scripts {
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        @if (TempData["Success"] != null)
+        @if (!string.IsNullOrEmpty(successMsg))
         {
-            var successMessage = @Html.Raw(Json.Serialize(TempData["Success"].ToString()));
             <text>
             Swal.fire({
                 icon: 'success',
                 title: 'Başarılı!',
-                text: successMessage,
+                text: @Html.Raw(Json.Serialize(successMsg)),
                 confirmButtonColor: '#c3935b',
                 confirmButtonText: 'Tamam'
             });
             </text>
         }
-        @if (TempData["Error"] != null)
+        @if (!string.IsNullOrEmpty(errorMsg))
         {
-            var errorMessage = @Html.Raw(Json.Serialize(TempData["Error"].ToString()));
             <text>
             Swal.fire({
                 icon: 'error',
                 title: 'Hata!',
-                text: errorMessage,
+                text: @Html.Raw(Json.Serialize(errorMsg)),
                 confirmButtonColor: '#c3935b',
                 confirmButtonText: 'Tamam'
             });

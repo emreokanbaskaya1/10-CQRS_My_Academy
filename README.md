@@ -97,21 +97,21 @@ A generic `IRepository<T>` abstracts data access, and `IUnitOfWork` wraps multip
 
 ```
 MyAcademyCQRS/
-??? Areas/Admin/            # Isolated admin area (controllers + views)
-??? Controllers/            # Public-facing controllers
-??? CQRSPattern/            # Commands, queries, handlers, results
-??? DesignPatterns/
-?   ??? ChainOfResponsibility/
-?   ??? Mediator/
-?   ??? Observer/
-?   ??? UnitOfWork/
-??? Entities/               # Domain models + enums
-??? Context/                # EF Core DbContext
-??? Data/                   # Seed data
-??? Extensions/             # Service registration extensions
-??? Mappings/               # AutoMapper profiles
-??? Services/               # Cloud storage abstraction
-??? wwwroot/                # Static assets
+|-- Areas/Admin/            # Isolated admin area (controllers + views)
+|-- Controllers/            # Public-facing controllers
+|-- CQRSPattern/            # Commands, queries, handlers, results
+|-- DesignPatterns/
+|   |-- ChainOfResponsibility/
+|   |-- Mediator/
+|   |-- Observer/
+|   `-- UnitOfWork/
+|-- Entities/               # Domain models + enums
+|-- Context/                # EF Core DbContext
+|-- Data/                   # Seed data
+|-- Extensions/             # Service registration extensions
+|-- Mappings/               # AutoMapper profiles
+|-- Services/               # Cloud storage abstraction
+`-- wwwroot/                # Static assets
 ```
 
 ---

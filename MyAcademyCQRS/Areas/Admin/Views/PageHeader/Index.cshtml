@@ -1,0 +1,75 @@
+@model List<MyAcademyCQRS.Entities.PageHeader>
+@{ ViewData["Title"] = "Sayfa Baþlýklarý"; }
+
+@if (TempData["Success"] != null) {
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+}
+@if (TempData["Error"] != null) {
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0"><i class="fas fa-images me-2"></i>Sayfa Görselleri</h5>
+    <a href="@Url.Action("Create")" class="btn btn-bakery"><i class="fas fa-plus me-2"></i> Yeni Sayfa Görseli</a>
+</div>
+
+<div class="row">
+    @foreach (var header in Model)
+    {
+        <div class="col-lg-6 col-md-12 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">@header.Title</h6>
+                    <span class="badge @(header.IsActive ? "bg-success" : "bg-secondary")">
+                        @(header.IsActive ? "Aktif" : "Pasif")
+                    </span>
+                </div>
+                @if (!string.IsNullOrEmpty(header.BackgroundImageUrl))
+                {
+                    <img src="@header.BackgroundImageUrl" class="card-img-top" alt="@header.PageName" style="height:250px;object-fit:cover;">
+                }
+                <div class="card-body">
+                    <span class="badge bg-info">@header.PageName</span>
+                </div>
+                <div class="card-footer">
+                    <a href="@Url.Action("Update", new { id = header.Id })" class="btn btn-sm btn-bakery-outline">
+                        <i class="fas fa-edit"></i> Düzenle
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@header.Id" method="post" class="d-inline" 
+                          onsubmit="return confirm('@header.PageName sayfasý görselini silmek istediðinize emin misiniz?')">
+                        <button class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash"></i> Sil
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!Model.Any())
+    {
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-file-image fa-3x mb-3 text-muted"></i>
+                    <h5 class="text-muted">Henüz sayfa görseli eklenmemiþ</h5>
+                    <p class="text-muted">Her sayfa için özel arka plan görseli ekleyin - sadece resim yeterli!</p>
+                    <a href="@Url.Action("Create")" class="btn btn-bakery mt-2">
+                        <i class="fas fa-plus me-2"></i> Ýlk Sayfa Görselini Ekle
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="alert alert-info mt-4">
+    <i class="fas fa-info-circle me-2"></i>
+    <strong>Bilgi:</strong> Her sayfa (Shop, Gallery, Contact, Testimonial, Cart) için özel arka plan görseli tanýmlayabilirsiniz.
+    Sadece sayfayý seçip görseli yükleyin - baþlýk otomatik oluþturulur! <strong>Önerilen boyut: 1920x400 px</strong>
+</div>

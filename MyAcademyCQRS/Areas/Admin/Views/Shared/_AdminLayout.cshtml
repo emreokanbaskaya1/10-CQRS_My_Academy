@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Bakery Admin</title>
+    <link rel="icon" href="~/images/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/bagery/font-awesome-all.css" rel="stylesheet">
+    <style>
+        :root {
+            --admin-primary: #c3935b;
+            --admin-dark: #2c2c2c;
+            --admin-sidebar: #1a1a2e;
+            --admin-bg: #f4f6f9;
+        }
+        body { font-family: 'Nunito', sans-serif; background: var(--admin-bg); margin: 0; }
+        .admin-wrapper { display: flex; min-height: 100vh; }
+        .admin-sidebar {
+            width: 260px; background: var(--admin-sidebar); color: #fff;
+            position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto;
+            z-index: 1000; transition: all 0.3s;
+        }
+        .admin-sidebar .logo-area {
+            padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .admin-sidebar .logo-area h3 { color: var(--admin-primary); margin: 0; font-weight: 700; }
+        .admin-sidebar .logo-area small { color: #888; font-size: 12px; }
+        .admin-sidebar .nav-menu { padding: 15px 0; }
+        .admin-sidebar .nav-menu a {
+            display: flex; align-items: center; padding: 12px 20px; color: #adb5bd;
+            text-decoration: none; transition: all 0.3s; font-size: 14px; border-left: 3px solid transparent;
+        }
+        .admin-sidebar .nav-menu a:hover, .admin-sidebar .nav-menu a.active {
+            color: #fff; background: rgba(195,147,91,0.15); border-left-color: var(--admin-primary);
+        }
+        .admin-sidebar .nav-menu a i { width: 24px; margin-right: 10px; text-align: center; }
+        .admin-sidebar .nav-menu .menu-label {
+            padding: 10px 20px 5px; font-size: 11px; text-transform: uppercase;
+            color: #666; letter-spacing: 1px; font-weight: 700;
+        }
+        .admin-content { margin-left: 260px; flex: 1; }
+        .admin-topbar {
+            background: #fff; padding: 15px 30px; display: flex; align-items: center;
+            justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .admin-topbar h4 { margin: 0; font-weight: 700; color: var(--admin-dark); }
+        .admin-topbar .breadcrumb { margin: 0; background: none; padding: 0; font-size: 13px; }
+        .admin-main { padding: 25px 30px; }
+        .card {
+            border: none; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+        }
+        .card-header {
+            background: #fff; border-bottom: 1px solid #eee; padding: 15px 20px;
+            font-weight: 700; border-radius: 10px 10px 0 0 !important;
+        }
+        .btn-bakery {
+            background: var(--admin-primary); color: #fff; border: none; border-radius: 6px;
+            padding: 8px 20px; font-weight: 600; transition: all 0.3s;
+        }
+        .btn-bakery:hover { background: #a87d4a; color: #fff; }
+        .btn-bakery-outline {
+            border: 2px solid var(--admin-primary); color: var(--admin-primary);
+            background: transparent; border-radius: 6px; padding: 6px 16px; font-weight: 600;
+        }
+        .btn-bakery-outline:hover { background: var(--admin-primary); color: #fff; }
+        .table th { background: #f8f9fa; font-weight: 700; font-size: 13px; text-transform: uppercase; }
+        .table td { vertical-align: middle; }
+        .badge-status { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-preparing { background: #cce5ff; color: #004085; }
+        .badge-ready { background: #d4edda; color: #155724; }
+        .badge-delivered { background: #d1ecf1; color: #0c5460; }
+        .badge-cancelled { background: #f8d7da; color: #721c24; }
+        .stat-card { border-radius: 10px; padding: 20px; color: #fff; }
+        .stat-card h2 { font-weight: 800; margin: 0; }
+        .stat-card p { margin: 5px 0 0; opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="logo-area">
+                <h3>🍞 Bakery</h3>
+                <small>Admin Panel</small>
+            </div>
+            <nav class="nav-menu">
+                <div class="menu-label">Ana Menü</div>
+                <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+
+                <div class="menu-label">İçerik Yönetimi</div>
+                <a href="@Url.Action("Index", "Slider", new { area = "Admin" })"><i class="fas fa-images"></i> Slider</a>
+                <a href="@Url.Action("Index", "PageHeader", new { area = "Admin" })"><i class="fas fa-file-image"></i> Sayfa Başlıkları</a>
+                <a href="@Url.Action("Index", "Category", new { area = "Admin" })"><i class="fas fa-tags"></i> Kategoriler</a>
+                <a href="@Url.Action("Index", "Product", new { area = "Admin" })"><i class="fas fa-birthday-cake"></i> Ürünler</a>
+                <a href="@Url.Action("Index", "Service", new { area = "Admin" })"><i class="fas fa-concierge-bell"></i> Hizmetler</a>
+                <a href="@Url.Action("Index", "ServiceStep", new { area = "Admin" })"><i class="fas fa-list-ol"></i> Feature Steps</a>
+                <a href="@Url.Action("Index", "OurHistory", new { area = "Admin" })"><i class="fas fa-history"></i> Tarihçemiz</a>
+                <a href="@Url.Action("Index", "PhotoGallery", new { area = "Admin" })"><i class="fas fa-camera-retro"></i> Galeri</a>
+
+                <div class="menu-label">Pazarlama</div>
+                <a href="@Url.Action("Index", "Promotion", new { area = "Admin" })"><i class="fas fa-percentage"></i> Kampanyalar</a>
+                <a href="@Url.Action("Index", "Testimonial", new { area = "Admin" })"><i class="fas fa-star"></i> Yorumlar</a>
+
+                <div class="menu-label">Sipariş & İletişim</div>
+                <a href="@Url.Action("Index", "Order", new { area = "Admin" })"><i class="fas fa-shopping-cart"></i> Siparişler</a>
+                <a href="@Url.Action("Index", "Contact", new { area = "Admin" })"><i class="fas fa-envelope"></i> Mesajlar</a>
+
+                <div class="menu-label">Sistem</div>
+                <a href="/"><i class="fas fa-globe"></i> Siteye Git</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="admin-content">
+            <div class="admin-topbar">
+                <h4>@ViewData["Title"]</h4>
+                <div class="d-flex align-items-center">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <span class="me-3 fw-bold text-secondary"><i class="fas fa-user-circle me-1"></i> @User.Identity.Name</span>
+                        <a href="@Url.Action("Logout", "Login", new { area = "Admin" })" class="btn btn-sm btn-outline-danger"><i class="fas fa-sign-out-alt me-1"></i> Çıkış</a>
+                    }
+                    else
+                    {
+                         <a href="@Url.Action("Index", "Login", new { area = "Admin" })" class="btn btn-sm btn-primary">Giriş</a>
+                    }
+                </div>
+            </div>
+            <div class="admin-main">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i> @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

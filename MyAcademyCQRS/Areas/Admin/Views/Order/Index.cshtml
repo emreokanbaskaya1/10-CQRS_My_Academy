@@ -1,0 +1,290 @@
+@model List<MyAcademyCQRS.CQRSPattern.Results.OrderResults.GetOrdersQueryResult>
+@{ ViewData["Title"] = "Sipariş Yönetimi"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Siparişler</h5>
+    <div>
+        <span class="badge bg-secondary">Toplam: @ViewBag.TotalCount sipariş</span>
+        <span class="badge bg-info ms-2">Sayfa: @ViewBag.CurrentPage / @ViewBag.TotalPages</span>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th><i class="fas fa-hashtag me-1"></i> SİPARİŞ NO</th>
+                            <th><i class="fas fa-user me-1"></i> MÜŞTERİ</th>
+                            <th><i class="fas fa-envelope me-1"></i> E-POSTA</th>
+                            <th><i class="fas fa-money-bill-wave me-1"></i> TUTAR</th>
+                            <th><i class="fas fa-tag me-1"></i> KUPON</th>
+                            <th><i class="fas fa-arrow-down me-1"></i> İNDİRİM</th>
+                            <th><i class="fas fa-shopping-bag me-1"></i> ÜRÜN SAYISI</th>
+                            <th><i class="fas fa-info-circle me-1"></i> DURUM</th>
+                            <th><i class="fas fa-calendar me-1"></i> TARİH</th>
+                            <th><i class="fas fa-cogs me-1"></i> İŞLEM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var o in Model)
+                        {
+                            <tr>
+                                <td><strong>#@o.Id</strong></td>
+                                <td>@o.CustomerName</td>
+                                <td>@o.Email</td>
+                                <td><strong class="text-success">₺@o.TotalPrice.ToString("N2")</strong></td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(o.PromoCode))
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-ticket-alt me-1"></i>@o.PromoCode
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (o.DiscountAmount.HasValue && o.DiscountAmount.Value > 0)
+                                    {
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-arrow-down me-1"></i>₺@o.DiscountAmount.Value.ToString("N2")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td><span class="badge bg-primary">@o.ItemCount</span></td>
+                                <td>
+                                    @{
+                                        var statusClass = o.Status.ToString() switch
+                                        {
+                                            "Pending" => "badge-pending",
+                                            "Preparing" => "badge-preparing",
+                                            "Ready" => "badge-ready",
+                                            "Delivered" => "badge-delivered",
+                                            "Cancelled" => "badge-cancelled",
+                                            _ => "bg-secondary"
+                                        };
+                                        var statusText = o.Status.ToString() switch
+                                        {
+                                            "Pending" => "Beklemede",
+                                            "Preparing" => "Hazırlanıyor",
+                                            "Ready" => "Hazır",
+                                            "Delivered" => "Teslim Edildi",
+                                            "Cancelled" => "İptal",
+                                            _ => o.Status.ToString()
+                                        };
+                                    }
+                                    <span class="badge badge-status @statusClass">@statusText</span>
+                                </td>
+                                <td>@o.CreatedDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="@Url.Action("Details", new { id = o.Id })" class="btn btn-sm btn-bakery-outline" title="Detaylar">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" title="Durum Değiştir">
+                                            <i class="fas fa-exchange-alt"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <h6 class="dropdown-header"><i class="fas fa-info-circle me-1"></i> Durum Değiştir</h6>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            @if (o.Status != MyAcademyCQRS.Entities.Enums.OrderStatus.Pending)
+                                            {
+                                                <li>
+                                                    <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" value="@o.Id">
+                                                        <input type="hidden" name="status" value="@((int)MyAcademyCQRS.Entities.Enums.OrderStatus.Pending)">
+                                                        <button class="dropdown-item" type="submit">
+                                                            <i class="fas fa-clock text-warning me-2"></i> Beklemede
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            }
+                                            @if (o.Status != MyAcademyCQRS.Entities.Enums.OrderStatus.Preparing)
+                                            {
+                                                <li>
+                                                    <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" value="@o.Id">
+                                                        <input type="hidden" name="status" value="@((int)MyAcademyCQRS.Entities.Enums.OrderStatus.Preparing)">
+                                                        <button class="dropdown-item" type="submit">
+                                                            <i class="fas fa-spinner text-primary me-2"></i> Hazırlanıyor
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            }
+                                            @if (o.Status != MyAcademyCQRS.Entities.Enums.OrderStatus.Ready)
+                                            {
+                                                <li>
+                                                    <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" value="@o.Id">
+                                                        <input type="hidden" name="status" value="@((int)MyAcademyCQRS.Entities.Enums.OrderStatus.Ready)">
+                                                        <button class="dropdown-item" type="submit">
+                                                            <i class="fas fa-check text-success me-2"></i> Hazır
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            }
+                                            @if (o.Status != MyAcademyCQRS.Entities.Enums.OrderStatus.Delivered)
+                                            {
+                                                <li>
+                                                    <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" value="@o.Id">
+                                                        <input type="hidden" name="status" value="@((int)MyAcademyCQRS.Entities.Enums.OrderStatus.Delivered)">
+                                                        <button class="dropdown-item" type="submit">
+                                                            <i class="fas fa-truck text-info me-2"></i> Teslim Edildi
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            }
+                                            <li><hr class="dropdown-divider"></li>
+                                            @if (o.Status != MyAcademyCQRS.Entities.Enums.OrderStatus.Cancelled)
+                                            {
+                                                <li>
+                                                    <form asp-action="UpdateStatus" method="post" class="d-inline" onsubmit="return confirm('Siparişi iptal etmek istediğinize emin misiniz?');">
+                                                        <input type="hidden" name="id" value="@o.Id">
+                                                        <input type="hidden" name="status" value="@((int)MyAcademyCQRS.Entities.Enums.OrderStatus.Cancelled)">
+                                                        <button class="dropdown-item text-danger" type="submit">
+                                                            <i class="fas fa-times-circle me-2"></i> İptal Et
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-shopping-cart fa-3x mb-3 text-muted"></i>
+                <h5 class="text-muted">Bu sayfada sipariş yok</h5>
+                <p class="text-muted">Farklı bir sayfa seçmeyi deneyin.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Pagination -->
+@if (ViewBag.TotalPages > 1)
+{
+    <nav aria-label="Sipariş sayfaları" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <!-- First Page -->
+            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { page = 1 })">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+            </li>
+
+            <!-- Previous Page -->
+            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })">
+                    <i class="fas fa-angle-left"></i>
+                </a>
+            </li>
+
+            @{
+                int currentPage = ViewBag.CurrentPage;
+                int totalPages = ViewBag.TotalPages;
+                int startPage = Math.Max(1, currentPage - 2);
+                int endPage = Math.Min(totalPages, currentPage + 2);
+            }
+
+            @if (startPage > 1)
+            {
+                <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = 1 })">1</a></li>
+                @if (startPage > 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                }
+            }
+
+            @for (int i = startPage; i <= endPage; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                </li>
+            }
+
+            @if (endPage < totalPages)
+            {
+                @if (endPage < totalPages - 1)
+                {
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                }
+                <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = totalPages })">@totalPages</a></li>
+            }
+
+            <!-- Next Page -->
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+            </li>
+
+            <!-- Last Page -->
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.TotalPages })">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="text-center text-muted mb-4">
+        <small>
+            Gösterilen: @((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) - @(Math.Min(ViewBag.CurrentPage * ViewBag.PageSize, ViewBag.TotalCount)) / @ViewBag.TotalCount sipariş
+        </small>
+    </div>
+}
+
+@if (Model.Any())
+{
+    <div class="alert alert-info mt-4">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Bilgi:</strong> Sipariş durumlarını değiştirmek için "İşlem" sütunundaki dropdown menüyü kullanabilirsiniz.
+        Her sayfada maksimum @ViewBag.PageSize sipariş gösterilir.
+    </div>
+}
+
+<style>
+    .pagination .page-link {
+        color: #c3935b;
+        border-color: #dee2e6;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #c3935b;
+        border-color: #c3935b;
+        color: #fff;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #f0f0f0;
+        border-color: #c3935b;
+        color: #c3935b;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #fff;
+        border-color: #dee2e6;
+    }
+</style>

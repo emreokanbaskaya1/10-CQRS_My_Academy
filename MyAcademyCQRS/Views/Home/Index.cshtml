@@ -1,0 +1,665 @@
+@{
+    ViewData["Title"] = "Ana Sayfa";
+    var sliders = ViewBag.Sliders as List<MyAcademyCQRS.Entities.Slider> ?? new();
+    var serviceSteps = ViewBag.ServiceSteps as List<MyAcademyCQRS.Entities.ServiceStep> ?? new();
+    var history = ViewBag.OurHistory as MyAcademyCQRS.Entities.OurHistory;
+    var categories = ViewBag.Categories as List<MyAcademyCQRS.Entities.Category> ?? new();
+    var products = ViewBag.Products as List<MyAcademyCQRS.Entities.Product> ?? new();
+    var services = ViewBag.Services as List<MyAcademyCQRS.Entities.Service> ?? new();
+    var gallery = ViewBag.Gallery as List<MyAcademyCQRS.Entities.PhotoGallery> ?? new();
+    var promotions = ViewBag.Promotions as List<MyAcademyCQRS.Entities.Promotion> ?? new();
+    var testimonials = ViewBag.Testimonials as List<MyAcademyCQRS.Entities.Testimonial> ?? new();
+}
+
+@if (TempData["Success"] != null) {
+<div class="alert alert-success alert-dismissible fade show m-3" role="alert">@TempData["Success"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+}
+
+<!-- Banner Section -->
+<section class="banner-section style-one">
+    <div class="banner-carousel owl-theme owl-carousel owl-dots-none">
+        @foreach (var slider in sliders)
+        {
+            <div class="slide-item">
+                <div class="image-layer" style="background-image:url(@slider.ImageUrl);"></div>
+                <div class="auto-container">
+                    <div class="content-box">
+                        <h1>@slider.Title</h1>
+                        <p>@slider.Description</p>
+                        @if (!string.IsNullOrEmpty(slider.ButtonText))
+                        {
+                            <div class="btn-box"><a href="@(slider.ButtonUrl ?? "#")" class="theme-btn-one">@slider.ButtonText</a></div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        @if (!sliders.Any())
+        {
+            <div class="slide-item">
+                <div class="image-layer" style="background-image:url(/images/banner/banner-1.jpg);"></div>
+                <div class="auto-container">
+                    <div class="content-box">
+                        <h1>En Taze Pastane Ürünleri</h1>
+                        <p>Geleneksel tariflerle hazýrlanan birbirinden lezzetli pastane ürünleri</p>
+                        <div class="btn-box"><a href="/Home/Shop" class="theme-btn-one">Ürünlere Göz At</a></div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Feature Section (ServiceSteps) -->
+@if (serviceSteps.Any())
+{
+<section class="feature-section sec-pad">
+    <div class="auto-container">
+        <div class="row clearfix">
+            @foreach (var step in serviceSteps)
+            {
+                <div class="col-lg-4 col-md-6 col-sm-12 feature-block">
+                    <div class="feature-block-one wow fadeInUp animated" data-wow-delay="@(step.StepNumber * 200)ms">
+                        <div class="inner-box">
+                            @if (!string.IsNullOrEmpty(step.ImageUrl))
+                            {
+                                <div class="step-image-box">
+                                    <img src="@step.ImageUrl" alt="@step.Title" class="step-image">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="icon-box">
+                                    @if (!string.IsNullOrEmpty(step.IconUrl))
+                                    {
+                                        <span class="@step.IconUrl"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="flaticon-shipped"></span>
+                                    }
+                                </div>
+                            }
+                            <h3>@step.Title</h3>
+                            <p>@step.Description</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .step-image-box {
+        width: 100%;
+        height: 200px;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .step-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 0.3s ease;
+    }
+
+    .feature-block-one:hover .step-image {
+        transform: scale(1.1);
+    }
+
+    .feature-block-one .inner-box {
+        text-align: center;
+        padding: 30px 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .feature-block-one:hover .inner-box {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 30px rgba(195, 147, 91, 0.2);
+    }
+
+    .feature-block-one .inner-box h3 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 15px;
+    }
+
+    .feature-block-one .inner-box p {
+        color: #666;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+</style>
+}
+
+<!-- Story Section (OurHistory) -->
+@if (history != null)
+{
+<section class="story-section sec-pad">
+    <div class="auto-container">
+        <div class="row clearfix">
+            <div class="col-lg-6 col-md-12 image-column">
+                <div class="image-box">
+                    @if (!string.IsNullOrEmpty(history.ImageUrl))
+                    {
+                        <figure class="image"><img src="@history.ImageUrl" alt="@history.Title"></figure>
+                    }
+                    
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 content-column">
+                <div class="content-box">
+                    <div class="sec-title"><span class="sub-title">Hikayemiz</span><h2>@history.Title</h2></div>
+                    <div class="text"><p>@history.Content</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+}
+
+<!-- Shop Section (Products by Category) -->
+<section class="menu-section sec-pad" id="shop">
+    <div class="auto-container">
+        <div class="sec-title centred"><span class="sub-title">Ürünlerimiz</span><h2>En Lezzetli Ürünler</h2></div>
+        <div class="row clearfix">
+            @foreach (var product in products)
+            {
+                <div class="col-lg-3 col-md-6 col-sm-12 menu-block">
+                    <div class="menu-block-one wow fadeInUp animated">
+                        <div class="inner-box">
+                            <figure class="image-box product-image-uniform">
+                                <img src="@(product.ImageUrl ?? "/images/resource/shop/product-1.jpg")" alt="@product.Name">
+                                <div class="product-overlay">
+                                    <a href="#" class="cart-btn" onclick="document.getElementById('addToCart_@product.Id').submit();return false;">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <span class="cart-text">Sepete Ekle</span>
+                                    </a>
+                                </div>
+                            </figure>
+                            <div class="lower-content">
+                                <h4>@product.Name</h4>
+                                <span class="price">?@product.Price.ToString("N2")</span>
+                            </div>
+                        </div>
+                    </div>
+                    <form id="addToCart_@product.Id" asp-action="AddToCart" asp-controller="Home" method="post" style="display:none;">
+                        <input type="hidden" name="productId" value="@product.Id">
+                    </form>
+                </div>
+            }
+        </div>
+        <div class="more-btn centred"><a href="/Home/Shop" class="theme-btn-one">Tüm Ürünler</a></div>
+    </div>
+</section>
+
+<style>
+    /* Uniform product image styling */
+    .product-image-uniform {
+        width: 100%;
+        height: 280px;
+        overflow: hidden;
+        position: relative;
+        border-radius: 12px;
+    }
+
+    .product-image-uniform img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 0.4s ease;
+    }
+
+    .menu-block-one:hover .product-image-uniform img {
+        transform: scale(1.1);
+    }
+
+    /* Product Overlay */
+    .product-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .menu-block-one:hover .product-overlay {
+        opacity: 1;
+    }
+
+    /* Cart button styling with text */
+    .cart-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 28px;
+        background: #c3935b;
+        color: #fff;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(195, 147, 91, 0.4);
+        transform: translateY(20px);
+    }
+
+    .menu-block-one:hover .cart-btn {
+        transform: translateY(0);
+    }
+
+    .cart-btn:hover {
+        background: #a67c4a;
+        color: #fff;
+        transform: scale(1.05) translateY(0);
+        box-shadow: 0 6px 20px rgba(195, 147, 91, 0.6);
+    }
+
+    .cart-btn .cart-text {
+        font-size: 15px;
+        font-weight: 700;
+        white-space: nowrap;
+        letter-spacing: 0.5px;
+    }
+
+    .cart-btn i {
+        font-size: 18px;
+    }
+
+    /* Product Card Enhancement */
+    .menu-block-one {
+        margin-bottom: 30px;
+    }
+
+    .menu-block-one .inner-box {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+
+    .menu-block-one:hover .inner-box {
+        box-shadow: 0 8px 30px rgba(195, 147, 91, 0.25);
+        transform: translateY(-5px);
+    }
+
+    .menu-block-one .lower-content {
+        padding: 20px 15px;
+        text-align: center;
+    }
+
+    .menu-block-one .lower-content h4 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 10px;
+        transition: color 0.3s ease;
+    }
+
+    .menu-block-one:hover .lower-content h4 {
+        color: #c3935b;
+    }
+
+    .menu-block-one .lower-content .price {
+        font-size: 20px;
+        font-weight: 800;
+        color: #c3935b;
+        display: block;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .product-image-uniform {
+            height: 220px;
+        }
+
+        .cart-btn {
+            padding: 12px 20px;
+        }
+
+        .cart-btn .cart-text {
+            font-size: 14px;
+        }
+
+        .cart-btn i {
+            font-size: 16px;
+        }
+    }
+</style>
+
+<!-- Services Section -->
+@if (services.Any())
+{
+<section class="service-section sec-pad bg-color-1">
+    <div class="auto-container">
+        <div class="sec-title centred"><span class="sub-title">Hizmetlerimiz</span><h2>Neler Sunuyoruz</h2></div>
+        <div class="row clearfix">
+            @foreach (var svc in services)
+            {
+                <div class="col-lg-4 col-md-6 col-sm-12 service-block">
+                    <div class="service-block-one wow fadeInUp animated">
+                        <div class="inner-box">
+                            <div class="icon-box service-custom-icon">
+                                @if (!string.IsNullOrEmpty(svc.IconUrl))
+                                {
+                                    <img src="@svc.IconUrl" alt="@svc.Title" class="service-custom-img">
+                                }
+                                else
+                                {
+                                    <span class="flaticon-cupcake"></span>
+                                }
+                            </div>
+                            <h3>@svc.Title</h3>
+                            <p>@svc.Description</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .service-custom-icon {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 250px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 30px 20px !important;
+        line-height: normal !important;
+    }
+    
+    .service-custom-img {
+        width: 100% !important;
+        max-width: 350px !important;
+        height: auto !important;
+        max-height: 250px !important;
+        object-fit: contain !important;
+        display: block !important;
+    }
+</style>
+}
+
+<!-- Gallery Section -->
+@if (gallery.Any())
+{
+<section class="gallery-section sec-pad">
+    <div class="auto-container">
+        <div class="sec-title centred"><span class="sub-title">Galeri</span><h2>Fotoðraflarýmýz</h2></div>
+        <div class="row clearfix">
+            @foreach (var photo in gallery)
+            {
+                <div class="col-lg-3 col-md-6 col-sm-12 gallery-block">
+                    <div class="gallery-block-one">
+                        <div class="inner-box">
+                            <figure class="image-box gallery-image-uniform">
+                                <img src="@photo.ImageUrl" alt="@photo.Title">
+                            </figure>
+                            <div class="view-btn">
+                                <a href="@photo.ImageUrl" class="lightbox-image" data-fancybox="gallery" title="@photo.Title">
+                                    <i class="fas fa-search-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Gallery image uniform styling */
+    .gallery-image-uniform {
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        margin-bottom: 0;
+    }
+
+    .gallery-image-uniform img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-block-one:hover .gallery-image-uniform img {
+        transform: scale(1.1);
+    }
+
+    .gallery-block-one .view-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 10;
+    }
+
+    .gallery-block-one:hover .view-btn {
+        opacity: 1;
+    }
+
+    .gallery-block-one .view-btn a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: #c3935b;
+        color: #fff;
+        border-radius: 50%;
+        font-size: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .gallery-block-one .view-btn a:hover {
+        background: #a87d4a;
+        transform: scale(1.1);
+    }
+</style>
+}
+
+<!-- Promotions Section -->
+@if (promotions.Any())
+{
+<section class="cta-section" style="background: linear-gradient(135deg, #c3935b 0%, #a87d4a 100%); padding: 60px 0;">
+    <div class="auto-container">
+        <div class="row clearfix align-items-center">
+            @foreach (var promo in promotions.Take(1))
+            {
+                <div class="col-lg-8">
+                    <h2 style="color:#fff; font-weight:800;">@promo.Title</h2>
+                    <p style="color:rgba(255,255,255,0.85); font-size:18px; margin-bottom:20px;">@promo.Description</p>
+                    @if (!string.IsNullOrEmpty(promo.PromoCode))
+                    {
+                        <span style="background:#fff; color:#c3935b; padding:8px 20px; border-radius:6px; font-weight:700; font-size:18px; display:inline-block;">KOD: @promo.PromoCode</span>
+                    }
+                </div>
+                <div class="col-lg-4 text-center">
+                    <div style="background:rgba(255,255,255,0.2); border-radius:50%; width:150px; height:150px; display:flex; align-items:center; justify-content:center; margin:auto;">
+                        <div><h1 style="color:#fff; font-weight:900; margin:0;">%@promo.DiscountPercentage</h1><span style="color:#fff;">ÝNDÝRÝM</span></div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+}
+
+<!-- Testimonials Section -->
+@if (testimonials.Any())
+{
+<section class="testimonial-section sec-pad bg-color-1">
+    <div class="auto-container">
+        <div class="sec-title centred"><span class="sub-title">Müþteri Yorumlarý</span><h2>Ne Diyorlar?</h2></div>
+        <div class="row clearfix">
+            @foreach (var t in testimonials)
+            {
+                <div class="col-lg-4 col-md-6 col-sm-12 testimonial-block">
+                    <div class="testimonial-block-one">
+                        <div class="inner-box">
+                            <div class="quote-icon">
+                                <i class="fas fa-quote-left"></i>
+                            </div>
+                            <div class="text"><p>"@t.Comment"</p></div>
+                            <div class="author-info">
+                                <div class="author-box">
+                                    <h4>@t.CustomerName</h4>
+                                    <div class="rating">
+                                        @for(int i=0;i<t.Rating;i++){<i class="fas fa-star"></i>}
+                                        @for(int i=0;i<(5-t.Rating);i++){<i class="far fa-star"></i>}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .testimonial-section {
+        background: #f8f9fa;
+    }
+
+    .testimonial-block-one {
+        margin-bottom: 30px;
+    }
+
+    .testimonial-block-one .inner-box {
+        background: #fff;
+        padding: 35px 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        position: relative;
+        transition: all 0.3s ease;
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .testimonial-block-one:hover .inner-box {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(195, 147, 91, 0.2);
+    }
+
+    .testimonial-block-one .quote-icon {
+        position: absolute;
+        top: 20px;
+        right: 25px;
+        font-size: 40px;
+        color: rgba(195, 147, 91, 0.15);
+        line-height: 1;
+    }
+
+    .testimonial-block-one .text {
+        margin-bottom: 25px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .testimonial-block-one .text p {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #555;
+        font-style: italic;
+        margin: 0;
+    }
+
+    .testimonial-block-one .author-info {
+        border-top: 2px solid #f0f0f0;
+        padding-top: 20px;
+        margin-top: auto;
+    }
+
+    .testimonial-block-one .author-box h4 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 8px;
+    }
+
+    .testimonial-block-one .rating {
+        display: flex;
+        gap: 3px;
+    }
+
+    .testimonial-block-one .rating i {
+        font-size: 16px;
+        color: #ffc107;
+    }
+
+    .testimonial-block-one .rating .far {
+        color: #ddd;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .testimonial-block-one .inner-box {
+            min-height: auto;
+            padding: 25px 20px;
+        }
+
+        .testimonial-block-one .text p {
+            font-size: 14px;
+        }
+
+        .testimonial-block-one .quote-icon {
+            font-size: 30px;
+            top: 15px;
+            right: 15px;
+        }
+    }
+</style>
+}
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        @if (TempData["CartSuccess"] != null)
+        {
+            var cartMessage = @Html.Raw(Json.Serialize(TempData["CartSuccess"].ToString()));
+            <text>
+            Swal.fire({
+                icon: 'success',
+                title: 'Baþarýlý!',
+                text: cartMessage,
+                confirmButtonColor: '#c3935b',
+                confirmButtonText: 'Tamam',
+                timer: 2000,
+                showConfirmButton: true
+            });
+            </text>
+        }
+    });
+</script>
+}
+

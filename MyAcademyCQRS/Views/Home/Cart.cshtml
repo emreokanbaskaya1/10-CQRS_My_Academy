@@ -1,0 +1,158 @@
+@model List<MyAcademyCQRS.CQRSPattern.Commands.OrderCommands.OrderItemDto>
+@{
+    ViewData["Title"] = "Sepet";
+    var products = ViewBag.Products as List<MyAcademyCQRS.Entities.Product> ?? new();
+    var pageHeader = ViewBag.PageHeader as MyAcademyCQRS.Entities.PageHeader;
+}
+
+@if (TempData["Success"] != null) {
+<div class="alert alert-success alert-dismissible fade show m-3" role="alert">@TempData["Success"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+}
+@if (TempData["Error"] != null) {
+<div class="alert alert-danger alert-dismissible fade show m-3" role="alert">@TempData["Error"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+}
+
+<section class="page-title" style="background-image:url(@(pageHeader?.BackgroundImageUrl ?? "/images/background/page-title.jpg"));">
+    <div class="auto-container">
+        <div class="content-box">
+            <h1>@(pageHeader?.Title ?? "Sepet")</h1>
+            <ul class="bread-crumb clearfix"><li><a href="/">Ana Sayfa</a></li><li>Sepet</li></ul>
+        </div>
+    </div>
+</section>
+
+<section class="cart-section sec-pad">
+    <div class="auto-container">
+        @if (Model.Any())
+        {
+            <div class="row clearfix">
+                <div class="col-lg-8 mb-4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" style="min-width:500px;">
+                            <thead><tr><th>Ürün</th><th style="width:100px;">Fiyat</th><th style="width:60px;">Adet</th><th style="width:110px;">Toplam</th><th style="width:50px;"></th></tr></thead>
+                            <tbody>
+                                @{ decimal grandTotal = 0; }
+                                @foreach (var item in Model)
+                                {
+                                    var product = products.FirstOrDefault(p => p.Id == item.ProductId);
+                                    if (product == null) continue;
+                                    var lineTotal = product.Price * item.Quantity;
+                                    grandTotal += lineTotal;
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="@(product.ImageUrl ?? "/images/resource/shop/product-1.jpg")" alt="" style="width:60px;height:60px;object-fit:cover;border-radius:6px;margin-right:12px;">
+                                                <span>@product.Name</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-nowrap">₺@product.Price.ToString("N2")</td>
+                                        <td>@item.Quantity</td>
+                                        <td class="text-nowrap"><strong>₺@lineTotal.ToString("N2")</strong></td>
+                                        <td>
+                                            <form asp-action="RemoveFromCart" asp-controller="Home" method="post">
+                                                <input type="hidden" name="productId" value="@product.Id">
+                                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr><td colspan="3" class="text-end"><strong>Genel Toplam:</strong></td><td colspan="2"><strong class="text-success fs-5">₺@grandTotal.ToString("N2")</strong></td></tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="card">
+                        <div class="card-header" style="background:#c3935b;color:#fff;font-weight:700;"><i class="fas fa-credit-card me-2"></i>Sipariş Ver</div>
+                        <div class="card-body">
+                            <form asp-action="Checkout" asp-controller="Home" method="post" id="checkoutForm">
+                                <div class="mb-3"><label class="form-label">Ad Soyad *</label><input name="customerName" id="customerName" class="form-control" required></div>
+                                <div class="mb-3"><label class="form-label">E-posta *</label><input name="email" id="email" type="email" class="form-control" required></div>
+                                <div class="mb-3"><label class="form-label">Telefon</label><input name="phone" id="phone" class="form-control"></div>
+                                <div class="mb-3"><label class="form-label">Promosyon Kodu</label><input name="promoCode" id="promoCode" class="form-control" placeholder="Varsa giriniz"></div>
+                                <div class="mb-3"><label class="form-label">Not</label><textarea name="note" id="note" class="form-control" rows="2"></textarea></div>
+                                <button type="submit" class="btn w-100" style="background:#c3935b;color:#fff;font-weight:700;padding:12px;">
+                                    <i class="fas fa-check me-2"></i>Siparişi Tamamla
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+                <h3>Sepetiniz boş</h3>
+                <p class="text-muted">Ürünlerimize göz atarak sepetinize ürün ekleyebilirsiniz.</p>
+                <a href="/Home/Shop" class="theme-btn-one">Alışverişe Başla</a>
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var checkoutForm = document.getElementById('checkoutForm');
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                if (!checkoutForm.checkValidity()) {
+                    checkoutForm.reportValidity();
+                    return;
+                }
+
+                var formData = new FormData(checkoutForm);
+                var customerName = formData.get('customerName');
+
+                Swal.fire({
+                    title: 'Sipariş Onayı',
+                    html: '<b>' + customerName + '</b>, siparişinizi tamamlamak istediğinize emin misiniz?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Evet, Tamamla',
+                    cancelButtonText: 'İptal',
+                    confirmButtonColor: '#c3935b',
+                    cancelButtonColor: '#6c757d',
+                    showLoaderOnConfirm: true,
+                    preConfirm: function () {
+                        return fetch(checkoutForm.action, {
+                            method: 'POST',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                            body: formData
+                        })
+                        .then(function (res) { return res.json(); })
+                        .then(function (data) {
+                            if (!data.success) {
+                                throw new Error(data.message || 'Bir hata oluştu');
+                            }
+                            return data;
+                        })
+                        .catch(function (error) {
+                            Swal.showValidationMessage('Hata: ' + error.message);
+                        });
+                    },
+                    allowOutsideClick: function () { return !Swal.isLoading(); }
+                }).then(function (result) {
+                    if (result.isConfirmed && result.value) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sipariş Oluşturuldu!',
+                            html: result.value.message,
+                            confirmButtonText: 'Ana Sayfaya Dön',
+                            confirmButtonColor: '#c3935b'
+                        }).then(function () {
+                            window.location.href = '/';
+                        });
+                    }
+                });
+            });
+        }
+    });
+</script>
+}

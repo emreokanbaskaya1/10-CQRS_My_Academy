@@ -1,0 +1,50 @@
+@model MyAcademyCQRS.CQRSPattern.Results.OrderResults.GetOrderByIdQueryResult
+@{ ViewData["Title"] = "Sipariş Detayı #" + Model.Id; }
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><i class="fas fa-info-circle me-2"></i>Sipariş Bilgileri</div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr><th>Sipariş No:</th><td>#@Model.Id</td></tr>
+                    <tr><th>Müşteri:</th><td>@Model.CustomerName</td></tr>
+                    <tr><th>E-posta:</th><td>@Model.Email</td></tr>
+                    <tr><th>Telefon:</th><td>@(Model.Phone ?? "-")</td></tr>
+                    <tr><th>Not:</th><td>@(Model.Note ?? "-")</td></tr>
+                    <tr><th>Tarih:</th><td>@Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")</td></tr>
+                    <tr><th>Durum:</th><td><span class="badge bg-info">@Model.Status</span></td></tr>
+                    @if (!string.IsNullOrEmpty(Model.PromoCode) && Model.DiscountAmount.HasValue)
+                    {
+                        var subtotal = Model.TotalPrice + Model.DiscountAmount.Value;
+                        var discountPercentage = (Model.DiscountAmount.Value / subtotal) * 100;
+                        <tr><th>Ara Toplam:</th><td>₺@subtotal.ToString("N2")</td></tr>
+                        <tr><th>Promosyon Kodu:</th><td><span class="badge bg-warning text-dark">@Model.PromoCode</span></td></tr>
+                        <tr><th>İndirim:</th><td><span class="text-danger">-₺@Model.DiscountAmount.Value.ToString("N2") <small>(%@discountPercentage.ToString("N0"))</small></span></td></tr>
+                    }
+                    <tr><th>Toplam:</th><td><strong class="text-success fs-5">₺@Model.TotalPrice.ToString("N2")</strong></td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><i class="fas fa-list me-2"></i>Sipariş Kalemleri</div>
+            <div class="card-body table-responsive">
+                <table class="table">
+                    <thead><tr><th>Ürün</th><th>Birim Fiyat</th><th>Adet</th><th>Toplam</th></tr></thead>
+                    <tbody>
+                        @foreach (var item in Model.Items) {
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>₺@item.UnitPrice.ToString("N2")</td>
+                            <td>@item.Quantity</td>
+                            <td><strong>₺@((item.UnitPrice * item.Quantity).ToString("N2"))</strong></td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="@Url.Action("Index")" class="btn btn-secondary mt-3"><i class="fas fa-arrow-left me-2"></i>Geri Dön</a>

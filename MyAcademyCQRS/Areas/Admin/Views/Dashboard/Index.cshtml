@@ -1,0 +1,309 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- İstatistik Kartları -->
+<div class="row">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card" style="background: linear-gradient(135deg, #c3935b, #a87d4a);">
+            <h2>@ViewBag.ProductCount</h2>
+            <p><i class="fas fa-birthday-cake"></i> Ürün</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card" style="background: linear-gradient(135deg, #28a745, #20c997);">
+            <h2>@ViewBag.OrderCount</h2>
+            <p><i class="fas fa-shopping-cart"></i> Sipariş</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card" style="background: linear-gradient(135deg, #007bff, #6610f2);">
+            <h2>@ViewBag.ContactCount</h2>
+            <p><i class="fas fa-envelope"></i> Okunmamış Mesaj</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="stat-card" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+            <h2>₺@ViewBag.TotalRevenue.ToString("N2")</h2>
+            <p><i class="fas fa-money-bill-wave"></i> Toplam Gelir</p>
+        </div>
+    </div>
+</div>
+
+<!-- Grafikler - 3'lü Grid -->
+<div class="row">
+    <!-- Sipariş Durumu Doughnut Chart -->
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card chart-card">
+            <div class="card-header chart-header">
+                <i class="fas fa-chart-pie me-2"></i> Sipariş Durumları
+            </div>
+            <div class="card-body chart-body">
+                <canvas id="orderStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kategorilere Göre Ürünler Bar Chart -->
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card chart-card">
+            <div class="card-header chart-header">
+                <i class="fas fa-chart-bar me-2"></i> Kategoriler
+            </div>
+            <div class="card-body chart-body">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Son 7 Gün Sipariş Trendi Line Chart -->
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card chart-card">
+            <div class="card-header chart-header">
+                <i class="fas fa-chart-line me-2"></i> 7 Günlük Trend
+            </div>
+            <div class="card-body chart-body">
+                <canvas id="orderTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aylık Gelir Trendi Area Chart -->
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card chart-card">
+            <div class="card-header chart-header">
+                <i class="fas fa-chart-area me-2"></i> Aylık Gelir
+            </div>
+            <div class="card-body chart-body">
+                <canvas id="monthlyRevenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- En Çok Satan Ürünler Horizontal Bar Chart -->
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card chart-card">
+            <div class="card-header chart-header">
+                <i class="fas fa-star me-2"></i> Top 5 Ürün
+            </div>
+            <div class="card-body chart-body">
+                <canvas id="topProductsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aktif/Pasif Ürünler Pie Chart -->
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card chart-card">
+            <div class="card-header chart-header">
+                <i class="fas fa-toggle-on me-2"></i> Ürün Durumu
+            </div>
+            <div class="card-body chart-body">
+                <canvas id="productStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yorum Durumu Doughnut Chart -->
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card chart-card">
+            <div class="card-header chart-header">
+                <i class="fas fa-comments me-2"></i> Yorumlar
+            </div>
+            <div class="card-body chart-body">
+                <canvas id="testimonialChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hızlı Erişim -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-bolt me-2"></i> Hızlı Erişim
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("Index", "Product", new { area = "Admin" })" class="btn btn-bakery-outline w-100 py-3">
+                            <i class="fas fa-birthday-cake fa-2x d-block mb-2"></i> Ürünler
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("Index", "Order", new { area = "Admin" })" class="btn btn-bakery-outline w-100 py-3">
+                            <i class="fas fa-shopping-cart fa-2x d-block mb-2"></i> Siparişler
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("Index", "Contact", new { area = "Admin" })" class="btn btn-bakery-outline w-100 py-3">
+                            <i class="fas fa-envelope fa-2x d-block mb-2"></i> Mesajlar
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("Index", "Testimonial", new { area = "Admin" })" class="btn btn-bakery-outline w-100 py-3">
+                            <i class="fas fa-star fa-2x d-block mb-2"></i> Yorumlar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .chart-card {
+        height: 320px;
+    }
+    
+    .chart-header {
+        padding: 10px 15px;
+        font-size: 14px;
+        font-weight: 600;
+        background: #f8f9fa;
+    }
+    
+    .chart-body {
+        padding: 15px;
+        height: calc(100% - 45px);
+    }
+    
+    .chart-body canvas {
+        max-height: 100%;
+    }
+</style>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: { boxWidth: 12, font: { size: 10 } }
+            }
+        }
+    };
+
+    // 1. Sipariş Durumu Doughnut Chart
+    new Chart(document.getElementById('orderStatusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Beklemede', 'Hazırlanıyor', 'Hazır', 'Teslim', 'İptal'],
+            datasets: [{
+                data: [@ViewBag.PendingOrders, @ViewBag.PreparingOrders, @ViewBag.ReadyOrders, @ViewBag.DeliveredOrders, @ViewBag.CancelledOrders],
+                backgroundColor: ['#ffc107', '#007bff', '#28a745', '#17a2b8', '#dc3545']
+            }]
+        },
+        options: chartOptions
+    });
+
+    // 2. Kategorilere Göre Ürünler Bar Chart
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'bar',
+        data: {
+            labels: [@Html.Raw(ViewBag.CategoryNames)],
+            datasets: [{
+                label: 'Ürün',
+                data: [@ViewBag.CategoryCounts],
+                backgroundColor: '#c3935b'
+            }]
+        },
+        options: {
+            ...chartOptions,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+
+    // 3. Son 7 Gün Sipariş Trendi Line Chart
+    new Chart(document.getElementById('orderTrendChart'), {
+        type: 'line',
+        data: {
+            labels: [@Html.Raw(ViewBag.Last7DaysLabels)],
+            datasets: [{
+                label: 'Sipariş',
+                data: [@ViewBag.Last7DaysCounts],
+                borderColor: '#28a745',
+                backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            ...chartOptions,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+
+    // 4. Aylık Gelir Area Chart
+    new Chart(document.getElementById('monthlyRevenueChart'), {
+        type: 'line',
+        data: {
+            labels: [@Html.Raw(ViewBag.MonthLabels)],
+            datasets: [{
+                label: 'Gelir (₺)',
+                data: [@ViewBag.MonthlyRevenue],
+                borderColor: '#ffc107',
+                backgroundColor: 'rgba(255, 193, 7, 0.2)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            ...chartOptions,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // 5. En Çok Satan Ürünler Horizontal Bar
+    new Chart(document.getElementById('topProductsChart'), {
+        type: 'bar',
+        data: {
+            labels: [@Html.Raw(ViewBag.TopProductNames)],
+            datasets: [{
+                label: 'Satış',
+                data: [@ViewBag.TopProductQuantities],
+                backgroundColor: ['#c3935b', '#a87d4a', '#8b6f47', '#6e5a38', '#51452a']
+            }]
+        },
+        options: {
+            ...chartOptions,
+            indexAxis: 'y',
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+
+    // 6. Aktif/Pasif Ürünler Pie Chart
+    new Chart(document.getElementById('productStatusChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Aktif', 'Pasif'],
+            datasets: [{
+                data: [@ViewBag.ActiveProducts, @ViewBag.InactiveProducts],
+                backgroundColor: ['#28a745', '#dc3545']
+            }]
+        },
+        options: chartOptions
+    });
+
+    // 7. Yorumlar Doughnut Chart
+    new Chart(document.getElementById('testimonialChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Onaylı', 'Bekliyor'],
+            datasets: [{
+                data: [@ViewBag.ApprovedTestimonials, @ViewBag.PendingTestimonials],
+                backgroundColor: ['#17a2b8', '#ffc107']
+            }]
+        },
+        options: chartOptions
+    });
+</script>
+}

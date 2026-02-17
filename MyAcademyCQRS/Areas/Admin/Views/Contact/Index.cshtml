@@ -1,0 +1,29 @@
+@model List<MyAcademyCQRS.Entities.Contact>
+@{ ViewData["Title"] = "💌 Mesajlar"; }
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0">💌 İletişim Mesajları</h5>
+</div>
+<div class="card"><div class="card-body table-responsive">
+    <table class="table table-hover">
+        <thead><tr><th>#</th><th>👤 Ad Soyad</th><th>📧 E-posta</th><th>📝 Konu</th><th>💬 Mesaj</th><th>📅 Tarih</th><th>📋 Durum</th><th>⚙️ İşlem</th></tr></thead>
+        <tbody>
+            @foreach (var c in Model) {
+            <tr class="@(!c.IsRead ? "table-warning" : "")">
+                <td>@c.Id</td>
+                <td>@c.FullName</td>
+                <td><a href="mailto:@c.Email">@c.Email</a></td>
+                <td>@c.Subject</td>
+                <td style="max-width:250px;">@c.Message</td>
+                <td>@c.CreatedDate.ToString("dd.MM.yyyy HH:mm")</td>
+                <td><span class="badge @(c.IsRead ? "bg-secondary" : "bg-info")">@(c.IsRead ? "✅ Okundu" : "🔔 Yeni")</span></td>
+                <td>
+                    @if (!c.IsRead) {
+                    <form asp-action="MarkAsRead" asp-route-id="@c.Id" method="post" class="d-inline"><button class="btn btn-sm btn-bakery-outline" title="Okundu İşaretle"><i class="fas fa-check"></i></button></form>
+                    }
+                    <form asp-action="Delete" asp-route-id="@c.Id" method="post" class="d-inline" onsubmit="return confirm('Emin misiniz?')"><button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button></form>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div></div>

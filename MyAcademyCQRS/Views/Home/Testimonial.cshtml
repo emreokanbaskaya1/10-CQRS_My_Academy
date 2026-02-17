@@ -1,0 +1,94 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Yorum Bırak";
+    var pageHeader = ViewBag.PageHeader as MyAcademyCQRS.Entities.PageHeader;
+}
+
+<section class="page-title" style="background-image:url(@(pageHeader?.BackgroundImageUrl ?? "/images/background/page-title.jpg"));">
+    <div class="auto-container">
+        <div class="content-box">
+            <h1>@(pageHeader?.Title ?? "Yorum Bırakın")</h1>
+            <ul class="bread-crumb clearfix"><li><a href="/">Ana Sayfa</a></li><li>Yorum</li></ul>
+        </div>
+    </div>
+</section>
+
+<section class="testimonial-form-section sec-pad">
+    <div class="auto-container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="sec-title centred">
+                    <span class="sub-title">Deneyiminizi Paylaşın</span>
+                    <h2>Sizin İçin Önemlisiniz</h2>
+                    <p class="text-muted">Ürünlerimizle ilgili düşüncelerinizi duymak isteriz. Yorumunuz admin onayından sonra yayınlanacaktır.</p>
+                </div>
+                <div class="form-inner" style="background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                    <form asp-action="CreateTestimonial" asp-controller="Home" method="post">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 mb-3">
+                                <label class="form-label fw-bold">Ad Soyad *</label>
+                                <input type="text" name="CustomerName" class="form-control" placeholder="Adınız Soyadınız" required>
+                            </div>
+                            <div class="col-lg-12 mb-3">
+                                <label class="form-label fw-bold">Puan *</label>
+                                <div class="rating-input">
+                                    @for (int i = 5; i >= 1; i--)
+                                    {
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="Rating" id="rating@(i)" value="@i" @(i == 5 ? "checked" : "")>
+                                            <label class="form-check-label" for="rating@(i)">
+                                                @for (int j = 0; j < i; j++) { <i class="fas fa-star text-warning"></i> }
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mb-3">
+                                <label class="form-label fw-bold">Yorumunuz *</label>
+                                <textarea name="Comment" class="form-control" rows="5" placeholder="Deneyiminizi paylaşın..." required></textarea>
+                            </div>
+                            <div class="col-lg-12">
+                                <button type="submit" class="theme-btn-one">
+                                    <i class="fas fa-paper-plane me-2"></i>Yorum Gönder
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        @if (TempData["Success"] != null)
+        {
+            var successMessage = @Html.Raw(Json.Serialize(TempData["Success"].ToString()));
+            <text>
+            Swal.fire({
+                icon: 'success',
+                title: 'Başarılı!',
+                text: successMessage,
+                confirmButtonColor: '#c3935b',
+                confirmButtonText: 'Tamam'
+            });
+            </text>
+        }
+        @if (TempData["Error"] != null)
+        {
+            var errorMessage = @Html.Raw(Json.Serialize(TempData["Error"].ToString()));
+            <text>
+            Swal.fire({
+                icon: 'error',
+                title: 'Hata!',
+                text: errorMessage,
+                confirmButtonColor: '#c3935b',
+                confirmButtonText: 'Tamam'
+            });
+            </text>
+        }
+    });
+</script>
+}

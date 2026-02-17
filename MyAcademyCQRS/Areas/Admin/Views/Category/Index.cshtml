@@ -1,0 +1,31 @@
+﻿@model List<GetCategoriesQueryResult>
+@{ ViewData["Title"] = "🏷️ Kategori Yönetimi"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0">🏷️ Kategoriler</h5>
+    <a asp-controller="Category" asp-action="CreateCategory" class="btn btn-bakery"><i class="fas fa-plus me-2"></i> Yeni Kategori</a>
+</div>
+
+<div class="card">
+    <div class="card-body table-responsive">
+        <table class="table table-hover">
+            <thead><tr><th>#</th><th>Kategori Adı</th><th>Durum</th><th>İşlem</th></tr></thead>
+            <tbody>
+                @{ int count = 0; }
+                @foreach (var item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+                        <td>@item.Name</td>
+                        <td><span class="badge bg-success">✅ Aktif</span></td>
+                        <td>
+                            <a asp-controller="Category" asp-action="UpdateCategory" asp-route-id="@item.Id" class="btn btn-sm btn-bakery-outline"><i class="fas fa-edit"></i></a>
+                            <a asp-controller="Category" asp-action="DeleteCategory" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" onclick="return confirm('Emin misiniz?')"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

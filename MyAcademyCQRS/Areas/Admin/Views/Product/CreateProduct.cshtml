@@ -1,0 +1,37 @@
+﻿@model CreateProductCommand
+@{ ViewData["Title"] = "Yeni Ürün"; }
+
+<div class="card">
+    <div class="card-header"><i class="fas fa-plus me-2"></i>Yeni Ürün Ekle</div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Ürün Adı</label>
+                    <input asp-for="Name" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Kategori</label>
+                    <select asp-for="CategoryId" class="form-control" asp-items="@ViewBag.categories">
+                        <option value="">--- Kategori Seçin ---</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Fiyat (₺)</label>
+                    <input asp-for="Price" type="number" step="0.01" class="form-control" required>
+                </div>
+                <div class="col-md-8 mb-3">
+                    <label class="form-label">Ürün Görseli</label>
+                    <input type="file" name="imageFile" class="form-control" accept="image/*">
+                    <input asp-for="ImageUrl" type="hidden">
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Açıklama</label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-bakery"><i class="fas fa-save me-2"></i>Kaydet</button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">İptal</a>
+        </form>
+    </div>
+</div>

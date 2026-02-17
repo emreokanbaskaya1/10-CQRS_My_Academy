@@ -1,0 +1,88 @@
+@{ 
+    ViewData["Title"] = "İletişim";
+    var pageHeader = ViewBag.PageHeader as MyAcademyCQRS.Entities.PageHeader;
+}
+
+<section class="page-title" style="background-image:url(@(pageHeader?.BackgroundImageUrl ?? "/images/background/page-title.jpg"));">
+    <div class="auto-container">
+        <div class="content-box">
+            <h1>@(pageHeader?.Title ?? "İletişim")</h1>
+            <ul class="bread-crumb clearfix"><li><a href="/">Ana Sayfa</a></li><li>İletişim</li></ul>
+        </div>
+    </div>
+</section>
+
+<section class="contact-section sec-pad">
+    <div class="auto-container">
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12 form-column">
+                <div class="form-inner">
+                    <div class="sec-title"><span class="sub-title">Bize Ulaşın</span><h2>Mesaj Gönderin</h2></div>
+                    <form asp-action="Contact" asp-controller="Home" method="post">
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                <input type="text" name="FullName" placeholder="Ad Soyad *" required class="form-control">
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+                                <input type="email" name="Email" placeholder="E-posta *" required class="form-control">
+                            </div>
+                            <div class="col-lg-12 form-group">
+                                <input type="text" name="Subject" placeholder="Konu *" required class="form-control">
+                            </div>
+                            <div class="col-lg-12 form-group">
+                                <textarea name="Message" placeholder="Mesajınız *" rows="6" required class="form-control"></textarea>
+                            </div>
+                            <div class="col-lg-12 form-group message-btn">
+                                <button type="submit" class="theme-btn-one">Gönder</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 info-column">
+                <div class="info-inner">
+                    <div class="sec-title"><span class="sub-title">Bilgilerimiz</span><h2>Adres & Telefon</h2></div>
+                    <ul class="info-list clearfix">
+                        <li><i class="fas fa-map-marker-alt"></i><h5>Adres</h5><p>İstanbul, Türkiye</p></li>
+                        <li><i class="fas fa-phone"></i><h5>Telefon</h5><p>+90 212 555 0000</p></li>
+                        <li><i class="fas fa-envelope"></i><h5>E-posta</h5><p>info@bakery.com</p></li>
+                        <li><i class="fas fa-clock"></i><h5>Çalışma Saatleri</h5><p>Pzt-Cum: 08:00 - 20:00</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        @if (TempData["Success"] != null)
+        {
+            var successMessage = @Html.Raw(Json.Serialize(TempData["Success"].ToString()));
+            <text>
+            Swal.fire({
+                icon: 'success',
+                title: 'Başarılı!',
+                text: successMessage,
+                confirmButtonColor: '#c3935b',
+                confirmButtonText: 'Tamam'
+            });
+            </text>
+        }
+        @if (TempData["Error"] != null)
+        {
+            var errorMessage = @Html.Raw(Json.Serialize(TempData["Error"].ToString()));
+            <text>
+            Swal.fire({
+                icon: 'error',
+                title: 'Hata!',
+                text: errorMessage,
+                confirmButtonColor: '#c3935b',
+                confirmButtonText: 'Tamam'
+            });
+            </text>
+        }
+    });
+</script>
+}

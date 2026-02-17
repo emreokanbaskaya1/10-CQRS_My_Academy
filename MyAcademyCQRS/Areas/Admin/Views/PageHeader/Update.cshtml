@@ -1,0 +1,40 @@
+@model MyAcademyCQRS.Entities.PageHeader
+@{ ViewData["Title"] = "Sayfa Baþlýðý Düzenle"; }
+
+<div class="card">
+    <div class="card-header"><i class="fas fa-edit me-2"></i>Sayfa Baþlýðý Düzenle</div>
+    <div class="card-body">
+        <form asp-action="Update" method="post" enctype="multipart/form-data">
+            <input asp-for="Id" type="hidden">
+            <div class="row">
+                <div class="col-md-8 mb-3">
+                    <label class="form-label">Sayfa *</label>
+                    <select asp-for="PageName" class="form-select" required>
+                        @foreach (var pageName in ViewBag.PageNames as string[])
+                        {
+                            <option value="@pageName">@pageName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Durum</label>
+                    <select asp-for="IsActive" class="form-select">
+                        <option value="true">Aktif</option>
+                        <option value="false">Pasif</option>
+                    </select>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Mevcut Arka Plan Görseli</label><br>
+                    @if (!string.IsNullOrEmpty(Model.BackgroundImageUrl))
+                    {
+                        <img src="@Model.BackgroundImageUrl" class="img-fluid rounded mb-2" style="max-width:400px;height:auto;">
+                    }
+                    <input type="file" name="imageFile" class="form-control" accept="image/*">
+                    <small class="text-muted">Boþ býrakýrsanýz mevcut görsel korunur. Önerilen boyut: 1920x400 px</small>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-bakery"><i class="fas fa-save me-2"></i>Güncelle</button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Ýptal</a>
+        </form>
+    </div>
+</div>

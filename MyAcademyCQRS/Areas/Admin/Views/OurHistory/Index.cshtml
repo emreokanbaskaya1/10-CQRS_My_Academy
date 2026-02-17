@@ -1,0 +1,20 @@
+@model List<MyAcademyCQRS.Entities.OurHistory>
+@{ ViewData["Title"] = "Tarihçemiz"; }
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Tarihçemiz</h5>
+    <a href="@Url.Action("Create")" class="btn btn-bakery"><i class="fas fa-plus me-2"></i>Yeni</a>
+</div>
+<div class="card"><div class="card-body table-responsive">
+    <table class="table table-hover">
+        <thead><tr><th>#</th><th>Görsel</th><th>Başlık</th><th>Yıl</th><th>İşlem</th></tr></thead>
+        <tbody>
+            @foreach (var h in Model) {
+            <tr><td>@h.Id</td><td>@if(!string.IsNullOrEmpty(h.ImageUrl)){<img src="@h.ImageUrl" style="width:60px;height:40px;object-fit:cover;border-radius:4px;">}</td><td>@h.Title</td><td>@h.SinceYear</td>
+            <td>
+                <a href="@Url.Action("Update", new { id = h.Id })" class="btn btn-sm btn-bakery-outline"><i class="fas fa-edit"></i></a>
+                <form asp-action="Delete" asp-route-id="@h.Id" method="post" class="d-inline" onsubmit="return confirm('Emin misiniz?')"><button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button></form>
+            </td></tr>
+            }
+        </tbody>
+    </table>
+</div></div>

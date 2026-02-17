@@ -1,0 +1,13 @@
+@model MyAcademyCQRS.Entities.OurHistory
+@{ ViewData["Title"] = "Yeni Tarihçe"; }
+<div class="card"><div class="card-header"><i class="fas fa-plus me-2"></i>Yeni Tarihçe</div><div class="card-body">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label">Başlık</label><input asp-for="Title" class="form-control" required></div>
+        <div class="col-md-3 mb-3"><label class="form-label">Kuruluş Yılı</label><input asp-for="SinceYear" type="number" class="form-control" required></div>
+        <div class="col-md-3 mb-3"><label class="form-label">Görsel</label><input type="file" name="imageFile" class="form-control" accept="image/*"></div>
+        <div class="col-md-12 mb-3"><label class="form-label">İçerik</label><textarea asp-for="Content" class="form-control" rows="5" required></textarea></div>
+    </div>
+    <button type="submit" class="btn btn-bakery"><i class="fas fa-save me-2"></i>Kaydet</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">İptal</a>
+</form></div></div>

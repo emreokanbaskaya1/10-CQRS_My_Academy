@@ -1,0 +1,23 @@
+@model List<MyAcademyCQRS.Entities.Promotion>
+@{ ViewData["Title"] = "🎁 Kampanya Yönetimi"; }
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0">🎁 Kampanyalar</h5>
+    <a href="@Url.Action("Create")" class="btn btn-bakery"><i class="fas fa-plus me-2"></i> Yeni Kampanya</a>
+</div>
+<div class="card"><div class="card-body table-responsive">
+    <table class="table table-hover">
+        <thead><tr><th>#</th><th>📝 Başlık</th><th>💰 İndirim</th><th>🎫 Kod</th><th>📅 Başlangıç</th><th>📅 Bitiş</th><th>📋 Durum</th><th>⚙️ İşlem</th></tr></thead>
+        <tbody>
+            @foreach (var p in Model) {
+            <tr><td>@p.Id</td><td>@p.Title</td><td><span class="badge bg-warning text-dark">%@p.DiscountPercentage 💸</span></td>
+            <td><code>@(p.PromoCode ?? "-")</code></td>
+            <td>@p.StartDate.ToString("dd.MM.yyyy")</td><td>@p.EndDate.ToString("dd.MM.yyyy")</td>
+            <td><span class="badge @(p.IsActive ? "bg-success" : "bg-secondary")">@(p.IsActive ? "✅ Aktif" : "⏸️ Pasif")</span></td>
+            <td>
+                <a href="@Url.Action("Update", new { id = p.Id })" class="btn btn-sm btn-bakery-outline"><i class="fas fa-edit"></i></a>
+                <form asp-action="Delete" asp-route-id="@p.Id" method="post" class="d-inline" onsubmit="return confirm('Emin misiniz?')"><button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button></form>
+            </td></tr>
+            }
+        </tbody>
+    </table>
+</div></div>

@@ -1,0 +1,38 @@
+@model MyAcademyCQRS.Entities.ServiceStep
+@{ ViewData["Title"] = "Step Düzenle"; }
+<div class="card">
+    <div class="card-header"><i class="fas fa-edit me-2"></i>Step Düzenle</div>
+    <div class="card-body">
+        <form asp-action="Update" method="post" enctype="multipart/form-data">
+            <input asp-for="Id" type="hidden">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Step No</label>
+                    <input asp-for="StepNumber" type="number" class="form-control" required>
+                </div>
+                <div class="col-md-8 mb-3">
+                    <label class="form-label">Başlık</label>
+                    <input asp-for="Title" class="form-control" required>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Açıklama</label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Görsel (İsteğe Bağlı)</label>
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <div class="mb-2">
+                            <img src="@Model.ImageUrl" alt="@Model.Title" style="max-width:200px;border-radius:6px;" class="mb-2">
+                            <p class="text-muted small">Mevcut görsel</p>
+                        </div>
+                    }
+                    <input type="file" name="imageFile" class="form-control" accept="image/*">
+                    <small class="text-muted">Boş bırakırsanız mevcut görsel korunur. Önerilen boyut: 400x300 px</small>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-bakery"><i class="fas fa-save me-2"></i>Güncelle</button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">İptal</a>
+        </form>
+    </div>
+</div>

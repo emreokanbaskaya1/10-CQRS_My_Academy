@@ -1,0 +1,48 @@
+@model MyAcademyCQRS.Entities.Slider
+@{ ViewData["Title"] = "Slider Düzenle"; }
+
+<div class="card">
+    <div class="card-header"><i class="fas fa-edit me-2"></i>Slider Düzenle</div>
+    <div class="card-body">
+        <form asp-action="Update" method="post" enctype="multipart/form-data">
+            <input asp-for="Id" type="hidden">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Başlık</label>
+                    <input asp-for="Title" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Buton Metni</label>
+                    <input asp-for="ButtonText" class="form-control">
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Açıklama</label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Buton URL</label>
+                    <input asp-for="ButtonUrl" class="form-control">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Sıra</label>
+                    <input asp-for="DisplayOrder" type="number" class="form-control">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Durum</label>
+                    <select asp-for="IsActive" class="form-select">
+                        <option value="true">Aktif</option>
+                        <option value="false">Pasif</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Mevcut Görsel</label><br>
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl)) { <img src="@Model.ImageUrl" style="width:120px;border-radius:6px;" class="mb-2"> }
+                    <input type="file" name="imageFile" class="form-control" accept="image/*">
+                    <small class="text-muted">Boş bırakırsanız mevcut görsel korunur.</small>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-bakery"><i class="fas fa-save me-2"></i>Güncelle</button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">İptal</a>
+        </form>
+    </div>
+</div>

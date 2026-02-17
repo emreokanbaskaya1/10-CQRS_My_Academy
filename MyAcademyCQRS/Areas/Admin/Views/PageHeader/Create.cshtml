@@ -1,0 +1,37 @@
+@model MyAcademyCQRS.Entities.PageHeader
+@{ ViewData["Title"] = "Yeni Sayfa Baþlýðý"; }
+
+<div class="card">
+    <div class="card-header"><i class="fas fa-plus me-2"></i>Yeni Sayfa Baþlýðý Ekle</div>
+    <div class="card-body">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-8 mb-3">
+                    <label class="form-label">Sayfa Seçin *</label>
+                    <select asp-for="PageName" class="form-select" required>
+                        <option value="">-- Sayfa Seçin --</option>
+                        @foreach (var pageName in ViewBag.PageNames as string[])
+                        {
+                            <option value="@pageName">@pageName</option>
+                        }
+                    </select>
+                    <small class="text-muted">Bu görsel hangi sayfada görünecek?</small>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Durum</label>
+                    <select asp-for="IsActive" class="form-select">
+                        <option value="true" selected>Aktif</option>
+                        <option value="false">Pasif</option>
+                    </select>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Arka Plan Görseli * (Önerilen: 1920x400 px)</label>
+                    <input type="file" name="imageFile" class="form-control" accept="image/*" required>
+                    <small class="text-muted">Sadece görseli seçin, baþlýk otomatik oluþturulacak</small>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-bakery"><i class="fas fa-save me-2"></i>Kaydet</button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">Ýptal</a>
+        </form>
+    </div>
+</div>

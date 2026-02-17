@@ -1,0 +1,62 @@
+@model List<MyAcademyCQRS.Entities.Slider>
+@{ ViewData["Title"] = "🖼️ Slider Yönetimi"; }
+
+@if (TempData["Success"] != null) {
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    ✅ @TempData["Success"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+}
+@if (TempData["Error"] != null) {
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    ❌ @TempData["Error"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0">🖼️ Slider Listesi</h5>
+    <a href="@Url.Action("Create")" class="btn btn-bakery"><i class="fas fa-plus me-2"></i> Yeni Slider</a>
+</div>
+
+<div class="card">
+    <div class="card-body table-responsive">
+        <table class="table table-hover">
+            <thead><tr><th>#</th><th>📷 Görsel</th><th>📝 Başlık</th><th>🔢 Sıra</th><th>📋 Durum</th><th>⚙️ İşlem</th></tr></thead>
+            <tbody>
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td>@s.Id</td>
+                        <td><img src="@s.ImageUrl" alt="slider" style="width:120px;height:60px;object-fit:cover;border-radius:6px;"></td>
+                        <td>
+                            <strong>@s.Title</strong>
+                            @if (!string.IsNullOrEmpty(s.ButtonText))
+                            {
+                                <br><small class="text-muted">🔗 @s.ButtonText</small>
+                            }
+                        </td>
+                        <td><span class="badge bg-info">@s.DisplayOrder</span></td>
+                        <td><span class="badge @(s.IsActive ? "bg-success" : "bg-secondary")">@(s.IsActive ? "✅ Aktif" : "⏸️ Pasif")</span></td>
+                        <td>
+                            <a href="@Url.Action("Update", new { id = s.Id })" class="btn btn-sm btn-bakery-outline"><i class="fas fa-edit"></i></a>
+                            <form asp-action="Delete" asp-route-id="@s.Id" method="post" class="d-inline" onsubmit="return confirm('❌ @s.Title slider\'ını silmek istediğinize emin misiniz?')">
+                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="fas fa-images fa-3x mb-3 d-block"></i>
+                            <p>Henüz slider eklenmemiş. Hemen bir tane oluşturun!</p>
+                            <a href="@Url.Action("Create")" class="btn btn-bakery mt-2"><i class="fas fa-plus me-2"></i> Yeni Slider Ekle</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

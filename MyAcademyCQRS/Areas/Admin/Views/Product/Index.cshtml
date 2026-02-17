@@ -1,0 +1,38 @@
+﻿@model List<GetProductsQueryResult>
+@{ ViewData["Title"] = "🍰 Ürün Yönetimi"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0">🍰 Ürünler</h5>
+    <a asp-controller="Product" asp-action="CreateProduct" class="btn btn-bakery"><i class="fas fa-plus me-2"></i> Yeni Ürün</a>
+</div>
+
+<div class="card">
+    <div class="card-body table-responsive">
+        <table class="table table-hover">
+            <thead><tr><th>#</th><th>📷 Görsel</th><th>Ürün Adı</th><th>💰 Fiyat</th><th>Kategori</th><th>⚙️ İşlem</th></tr></thead>
+            <tbody>
+                @{ int count = 0; }
+                @foreach (var item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="" style="width:60px;height:40px;object-fit:cover;border-radius:4px;">
+                            }
+                        </td>
+                        <td>@item.Name</td>
+                        <td><strong>₺@item.Price.ToString("N2")</strong></td>
+                        <td><span class="badge bg-info">@item.Category?.Name</span></td>
+                        <td>
+                            <a asp-controller="Product" asp-action="UpdateProduct" asp-route-id="@item.Id" class="btn btn-sm btn-bakery-outline"><i class="fas fa-edit"></i></a>
+                            <a asp-controller="Product" asp-action="DeleteProduct" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" onclick="return confirm('Emin misiniz?')"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

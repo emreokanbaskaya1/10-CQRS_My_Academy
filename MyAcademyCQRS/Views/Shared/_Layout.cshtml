@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>@ViewData["Title"] - Bakery</title>
+    <meta name="description" content="@(ViewData["Description"] ?? "En taze ve lezzetli pastane ürünleri")">
+    <link rel="icon" href="~/images/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="~/css/bagery/font-awesome-all.css" rel="stylesheet">
+    <link href="~/css/bagery/flaticon.css" rel="stylesheet">
+    <link href="~/css/bagery/owl.css" rel="stylesheet">
+    <link href="~/css/bagery/bootstrap.css" rel="stylesheet">
+    <link href="~/css/bagery/jquery.fancybox.min.css" rel="stylesheet">
+    <link href="~/css/bagery/animate.css" rel="stylesheet">
+    <link href="~/css/bagery/color.css" rel="stylesheet">
+    <link href="~/css/bagery/nice-select.css" rel="stylesheet">
+    <link href="~/css/bagery/global.css" rel="stylesheet">
+    <link href="~/css/bagery/style.css" rel="stylesheet">
+    <link href="~/css/bagery/responsive.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff !important;
+        }
+        .boxed_wrapper {
+            background-color: #ffffff !important;
+        }
+        /* Fix all sections to have white background */
+        section {
+            background-color: #ffffff !important;
+        }
+        /* Keep specific colored sections */
+        .bg-color-1 {
+            background-color: #f8f8f8 !important;
+        }
+        .cta-section {
+            background: linear-gradient(135deg, #c3935b 0%, #a87d4a 100%) !important;
+        }
+        /* Ensure feature-section has white background */
+        .feature-section {
+            background-color: #ffffff !important;
+        }
+        /* Ensure story-section has white background */
+        .story-section {
+            background-color: #ffffff !important;
+        }
+        /* Ensure menu-section has white background */
+        .menu-section {
+            background-color: #ffffff !important;
+        }
+        /* Ensure gallery-section has white background */
+        .gallery-section {
+            background-color: #ffffff !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="boxed_wrapper">
+
+        <!-- main header -->
+        <header class="main-header style-one">
+            <div class="header-lower">
+                <div class="outer-box">
+                    <div class="logo-box">
+                        <figure class="logo"><a href="/"><img src="~/images/logo.png" alt="Bakery"></a></figure>
+                    </div>
+                    <div class="menu-area">
+                        <div class="mobile-nav-toggler">
+                            <i class="icon-bar"></i><i class="icon-bar"></i><i class="icon-bar"></i>
+                        </div>
+                        <nav class="main-menu navbar-expand-md navbar-light">
+                            <div class="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
+                                <ul class="navigation clearfix">
+                                    <li class="current"><a href="/">Ana Sayfa</a></li>
+                                    <li><a href="/Home/Shop">Ürünler</a></li>
+                                    <li><a href="/Home/Gallery">Galeri</a></li>
+                                    <li><a href="/Home/CreateTestimonial">Yorum Bırak</a></li>
+                                    <li><a href="/Home/Contact">İletişim</a></li>
+                                    <li><a href="/Home/Cart"><i class="fas fa-shopping-cart"></i> Sepet</a></li>
+                                    <li><a href="/Admin/Dashboard">Admin</a></li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- main header end -->
+
+        <!-- mobile menu -->
+        <div class="mobile-menu">
+            <div class="menu-backdrop"></div>
+            <div class="close-btn"><i class="fas fa-times"></i></div>
+            <nav class="menu-box">
+                <div class="nav-logo"><a href="/"><img src="~/images/logo.png" alt=""></a></div>
+                <div class="menu-outer"></div>
+            </nav>
+        </div>
+
+        @RenderBody()
+
+        <!-- footer -->
+        <footer class="main-footer">
+            <div class="footer-top">
+                <div class="auto-container">
+                    <div class="row clearfix">
+                        <div class="col-lg-4 col-md-6 footer-column">
+                            <div class="footer-widget about-widget">
+                                <div class="widget-title"><h3>Hakkımızda</h3></div>
+                                <div class="text">
+                                    <p>En taze ve kaliteli pastane ürünleriyle hizmetinizdeyiz. Geleneksel tariflerimizle damak zevkinize hitap ediyoruz.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 footer-column">
+                            <div class="footer-widget links-widget">
+                                <div class="widget-title"><h3>Hızlı Bağlantılar</h3></div>
+                                <div class="widget-content">
+                                    <ul class="links-list clearfix">
+                                        <li><a href="/">Ana Sayfa</a></li>
+                                        <li><a href="/Home/Shop">Ürünler</a></li>
+                                        <li><a href="/Home/Gallery">Galeri</a></li>
+                                        <li><a href="/Home/Contact">İletişim</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 footer-column">
+                            <div class="footer-widget contact-widget">
+                                <div class="widget-title"><h3>İletişim</h3></div>
+                                <ul class="info-list clearfix">
+                                    <li><i class="fas fa-map-marker-alt"></i> İstanbul, Türkiye</li>
+                                    <li><i class="fas fa-phone"></i> +90 212 555 0000</li>
+                                    <li><i class="fas fa-envelope"></i> info@bakery.com</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="auto-container">
+                    <div class="copyright"><p>&copy; @DateTime.Now.Year Bakery. Tüm hakları saklıdır.</p></div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- scroll to top -->
+        <button class="scroll-top scroll-to-target" data-target="html">
+            <span class="fa fa-arrow-up"></span>
+        </button>
+    </div>
+
+    <script src="~/js/bagery/jquery.js"></script>
+    <script src="~/js/bagery/popper.min.js"></script>
+    <script src="~/js/bagery/bootstrap.min.js"></script>
+    <script src="~/js/bagery/owl.js"></script>
+    <script src="~/js/bagery/wow.js"></script>
+    <script src="~/js/bagery/jquery.fancybox.js"></script>
+    <script src="~/js/bagery/appear.js"></script>
+    <script src="~/js/bagery/scrollbar.js"></script>
+    <script src="~/js/bagery/nav-tool.js"></script>
+    <script src="~/js/bagery/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

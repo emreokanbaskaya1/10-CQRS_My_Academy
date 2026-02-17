@@ -34,10 +34,10 @@ All data operations are separated into **Commands** (write) and **Queries** (rea
 
 ```
 CQRSPattern/
-??? Commands/        # CreateProductCommand, UpdateOrderStatusCommand, ...
-??? Queries/         # GetProductsQuery, GetOrderByIdQuery, ...
-??? Handlers/        # One handler per command/query
-??? Results/         # Typed result objects for queries
+|-- Commands/        # CreateProductCommand, UpdateOrderStatusCommand, ...
+|-- Queries/         # GetProductsQuery, GetOrderByIdQuery, ...
+|-- Handlers/        # One handler per command/query
+`-- Results/         # Typed result objects for queries
 ```
 
 ### Chain of Responsibility
@@ -46,14 +46,14 @@ Used for multi-step validation pipelines. Order processing passes through a chai
 ```
 OrderValidation chain:
   ProductAvailabilityHandler
-    ? PromoCodeValidationHandler
-      ? PriceCalculationHandler
-        ? OrderValidationHandler
+    -> PromoCodeValidationHandler
+      -> PriceCalculationHandler
+        -> OrderValidationHandler
 
 ContactValidation chain:
   EmailValidationHandler
-    ? SpamCheckHandler
-      ? ContactValidationHandler
+    -> SpamCheckHandler
+      -> ContactValidationHandler
 ```
 
 ### Mediator Pattern
@@ -63,10 +63,10 @@ Decouples the controllers from business logic for testimonial and contact workfl
 Order and promotion events notify registered observers without tight coupling. Multiple observers react to the same event independently.
 
 ```
-OrderSubject ? OrderLogObserver
-             ? OrderNotificationObserver
+OrderSubject -> OrderLogObserver
+             -> OrderNotificationObserver
 
-PromotionSubject ? PromotionLogObserver
+PromotionSubject -> PromotionLogObserver
 ```
 
 ### Repository + Unit of Work

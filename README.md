@@ -7,7 +7,11 @@ A full-stack ASP.NET Core MVC application simulating a bakery ordering system. B
 ---
 
 
-Uploading Video Project 10 (1).mp4…
+
+
+https://github.com/user-attachments/assets/ab497fde-e5fa-4c7c-9b32-e962d6b796b8
+
+
 
 
 ---

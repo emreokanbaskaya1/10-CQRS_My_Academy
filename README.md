@@ -6,9 +6,15 @@ A full-stack ASP.NET Core MVC application simulating a bakery ordering system. B
 
 ---
 
+
+Uploading Video Project 10 (1).mp4â€¦
+
+
+---
+
 ## Purpose
 
-This project was built to demonstrate the practical application of enterprise-level design patterns in a .NET 9 web application — not just as isolated examples, but wired together in a cohesive, working system.
+This project was built to demonstrate the practical application of enterprise-level design patterns in a .NET 9 web application â€” not just as isolated examples, but wired together in a cohesive, working system.
 
 ---
 
@@ -41,7 +47,7 @@ CQRSPattern/
 ```
 
 ### Chain of Responsibility
-Used for multi-step validation pipelines. Order processing passes through a chain of handlers — each responsible for one validation concern — before being committed.
+Used for multi-step validation pipelines. Order processing passes through a chain of handlers â€” each responsible for one validation concern â€” before being committed.
 
 ```
 OrderValidation chain:
@@ -84,7 +90,7 @@ A generic `IRepository<T>` abstracts data access, and `IUnitOfWork` wraps multip
 - Photo gallery
 
 ### Admin Panel
-- **Dashboard** — 7 Chart.js visualizations: order status distribution, products by category, 7-day order trend, monthly revenue, top 5 products, active/inactive product ratio, testimonial approval status
+- **Dashboard** â€” 7 Chart.js visualizations: order status distribution, products by category, 7-day order trend, monthly revenue, top 5 products, active/inactive product ratio, testimonial approval status
 - Full CRUD for: Products, Categories, Sliders, Gallery, Services, Feature Steps, Promotions, Our History, Page Headers
 - Order management with pagination and inline status updates
 - Testimonial moderation (approve / reject)
